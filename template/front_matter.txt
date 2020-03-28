@@ -1,0 +1,13 @@
+---
+title:
+date: $date
+createdAt: $date
+updatedAt: $date
+description:
+image: $image
+slug: $slug
+category:
+tags:
+type: $type
+---
+
