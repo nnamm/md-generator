@@ -2,7 +2,7 @@
 
 Gridsomeで作ったポートフォリオサイトのブログ記事を書くときに、ディレクトリ作成やフロントマターの諸設定を含むMarkdownファイルをサクッと作るためのスクリプトです。
 
-▶︎ [nnamm works](htts://portfolio.nnamm.com)
+▶︎[nnamm works](https://portfolio.nnamm.com)
 
 ## 機能
 
