@@ -1,4 +1,4 @@
-""" md-generator unittest """
+""" md-generator のユニットテストケース """
 import os
 import unittest
 

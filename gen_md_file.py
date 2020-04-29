@@ -40,7 +40,7 @@ def create_front_matter_info(work_dir: str) -> dict:
         fm_dict["new_dir_name"] = str(latest_dir + 1).zfill(3)
         fm_dict["new_dir_path"] = work_dir + fm_dict["new_dir_name"]
     except IndexError as err:
-        print(f"作成できません。対象ディレクトリを確認してくださいね。：{err}")
+        print(f"作成できません。対象ディレクトリを確認してください。：{err}")
 
     # 新記事の作成日時（long: YYYY-MM-DD HH:MM:SS / short: YYMMDD）
     dt = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
