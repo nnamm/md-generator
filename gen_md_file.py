@@ -35,12 +35,16 @@ def create_front_matter_info(work_dir: str) -> dict:
     p = pathlib.Path(work_dir)
     dir_list = [p.name for p in p.iterdir() if p.is_dir()]
     dir_list.sort()
-    latest_dir = int(dir_list[-1])
-    fm_dict["new_dir_name"] = str(latest_dir + 1).zfill(3)
-    fm_dict["new_dir_path"] = work_dir + fm_dict["new_dir_name"]
+    try:
+        latest_dir = int(dir_list[-1])
+        fm_dict["new_dir_name"] = str(latest_dir + 1).zfill(3)
+        fm_dict["new_dir_path"] = work_dir + fm_dict["new_dir_name"]
+    except IndexError as err:
+        print(f"作成できません。対象ディレクトリを確認してくださいね。：{err}")
 
-    # 新記事の作成日時（long: YYYY-MM-DD HH:MM:SS / short: YYYYMMDD）
+    # 新記事の作成日時（long: YYYY-MM-DD HH:MM:SS / short: YYMMDD）
     dt = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    # dt = datetime.datetime(2020, 4, 29, 15).strftime("%Y-%m-%d %H:%M:%S")  # unittest用に日時指定
     fm_dict["created_date_long"] = dt
     fm_dict["created_date_short"] = (dt[2:10]).replace("-", "")
 
