@@ -13,7 +13,7 @@ import pathlib
 import string
 
 
-def create_front_matter_info(work_dir: str) -> dict:
+def create_front_matter_info(work_dir: str,) -> dict:
     """ フロントマター用のデータを作成する
     Args:
         work_dir: 所定のディレクトリパス
@@ -52,7 +52,7 @@ def create_front_matter_info(work_dir: str) -> dict:
     fm_dict["eye_path"] = f'/ec/blog/ec_blog_{fm_dict["new_dir_name"]}.jpg'
 
     # スラッグ
-    fm_dict["slug_str"] = f'{fm_dict["new_dir_name"]}-{fm_dict["created_date_short"]}-'
+    fm_dict["slug_str"] = f'b0{fm_dict["new_dir_name"]}-{fm_dict["created_date_short"]}-'
 
     return fm_dict
 
@@ -78,7 +78,7 @@ def generate_blog_file(params: dict):
     md_full_path = f"{dir_path}/{dir_name}_{s_date}.md"
     with open("template/front_matter.txt") as fm:
         t = string.Template(fm.read())
-        template = t.substitute(date=l_date, image=img_path, slug=slug, type=post_type)
+        template = t.substitute(date=l_date, image=img_path, slug=slug, type=post_type,)
         with open(md_full_path, "w") as new_md:
             new_md.write(template)
 

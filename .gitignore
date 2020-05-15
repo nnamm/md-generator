@@ -2,3 +2,4 @@
 config.ini
 .idea
 /venv/
+/.mypy_cache/
