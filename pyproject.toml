@@ -1,9 +1,14 @@
 [flake8]
-max-line-length = 120
-ignore = [ 'E203', 'W503', 'W504' ]
-
-[tool.black]
-line-length = 120
+max-line-length = 88
+max-complexity = 20
 
 [mypy]
 ignore_missing_imports = 1
+
+[tool.black]
+line-length = 88
+
+[tool.isort]
+include_trailing_comma = true
+line_length = 88
+multi_line_output = 3

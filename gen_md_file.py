@@ -44,7 +44,8 @@ def create_front_matter_info(work_dir: str,) -> dict:
 
     # 新記事の作成日時（long: YYYY-MM-DD HH:MM:SS / short: YYMMDD）
     dt = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    # dt = datetime.datetime(2020, 4, 29, 15).strftime("%Y-%m-%d %H:%M:%S")  # unittest用に日時指定
+    # unittest用に日時指定
+    # dt = datetime.datetime(2020, 4, 29, 15).strftime("%Y-%m-%d %H:%M:%S")
     fm_dict["created_date_long"] = dt
     fm_dict["created_date_short"] = (dt[2:10]).replace("-", "")
 
@@ -52,7 +53,9 @@ def create_front_matter_info(work_dir: str,) -> dict:
     fm_dict["eye_path"] = f'/ec/blog/ec_blog_{fm_dict["new_dir_name"]}.jpg'
 
     # スラッグ
-    fm_dict["slug_str"] = f'b0{fm_dict["new_dir_name"]}-{fm_dict["created_date_short"]}-'
+    fm_dict[
+        "slug_str"
+    ] = f'b0{fm_dict["new_dir_name"]}-{fm_dict["created_date_short"]}-'
 
     return fm_dict
 
