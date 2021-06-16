@@ -2,7 +2,7 @@
 import os
 import unittest
 
-import gen_md_file as md
+import main as md
 
 TEST_ANS_DICT = {
     "new_dir_name": "006",

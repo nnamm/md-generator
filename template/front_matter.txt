@@ -1,13 +1,16 @@
 ---
 title:
 date: $date
-createdAt: $date
-updatedAt: $date
-description:
-image: $image
-slug: $slug
-category:
+modified: $date
 tags:
-type: $type
+keyword:
+category:
+slug: $slug
+author: $author
+lang: $lang
+status: $status
+description:
+url: $url
+image: $image
 ---
 

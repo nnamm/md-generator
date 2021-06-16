@@ -13,8 +13,8 @@ import pathlib
 import string
 
 
-def create_front_matter_info(work_dir: str,) -> dict:
-    """ フロントマター用のデータを作成する
+def create_front_matter_info(work_dir: str) -> dict:
+    """フロントマター用のデータを作成する
     Args:
         work_dir: 所定のディレクトリパス
     Returns:
@@ -60,8 +60,8 @@ def create_front_matter_info(work_dir: str,) -> dict:
     return fm_dict
 
 
-def generate_blog_file(params: dict):
-    """ 新記事のディレクトリとファイルを作成する
+def generate_md_file(params: dict):
+    """新記事のディレクトリとファイルを作成する
     Args:
         params: フロントマターに設定する情報
     """
@@ -81,7 +81,12 @@ def generate_blog_file(params: dict):
     md_full_path = f"{dir_path}/{dir_name}_{s_date}.md"
     with open("template/front_matter.txt") as fm:
         t = string.Template(fm.read())
-        template = t.substitute(date=l_date, image=img_path, slug=slug, type=post_type,)
+        template = t.substitute(
+            date=l_date,
+            image=img_path,
+            slug=slug,
+            type=post_type,
+        )
         with open(md_full_path, "w") as new_md:
             new_md.write(template)
 
@@ -89,9 +94,13 @@ def generate_blog_file(params: dict):
     print(md_full_path)
 
 
-if __name__ == "__main__":
+def main():
+    """pass"""
     config = configparser.ConfigParser()
     config.read("config.ini")
     blog_path = config["path"]["blog"]
+    generate_md_file(create_front_matter_info(blog_path))
 
-    generate_blog_file(create_front_matter_info(blog_path))
+
+if __name__ == "__main__":
+    main()
