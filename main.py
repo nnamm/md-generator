@@ -1,10 +1,10 @@
 """
-新規ブログ記事の雛形Markdownファイルを作るスクリプト
-所定のディレクトリに、以下のディレクトリを作成する
-...blog/
-      |__001
-           |_img/
-           |_001_YYMMDD.md（フロントマター含）
+Generate a template md-file for new blog post.
+
+Create the following file in the specified directory. 
+content
+|__posts
+   |_001_YYMMDD.md(include the front matter)
 """
 
 import configparser
@@ -13,93 +13,84 @@ import pathlib
 import string
 
 
-def create_front_matter_info(work_dir: str) -> dict:
-    """フロントマター用のデータを作成する
-    Args:
-        work_dir: 所定のディレクトリパス
-    Returns:
-        dict: フロントマターに設定する情報
-    """
+class FrontMatter:
+    def __init__(self):
+        self.config = configparser.ConfigParser()
+        self.config.read("config.ini")
+        self.now = datetime.datetime.now()
+        self.new_post_number: str = self.get_new_post_number()
 
-    fm_dict = {
-        "new_dir_name": "",  # 新記事を格納するディレクトリ名（作業用）
-        "new_dir_path": "",  # 上記を含めたフルパス
-        "created_date_long": "",  # 記事作成日時ロング版（スクリプト実行日時）
-        "created_date_short": "",  # 上記のショート版
-        "eye_path": "",  # アイキャッチの画像のパス
-        "slug_str": "",  # スラッグ
-        "post_type": "blog",  # ポストタイプはblog
-    }
+    def get_new_post_number(self) -> str:
+        p = pathlib.Path(self.config["path"]["content"])
+        latest_posts_number = sum(f.is_file() for f in p.iterdir() if f.suffix == ".md")
 
-    # 新記事のディレクトリ名（ゼロパディング）とフルバス
-    p = pathlib.Path(work_dir)
-    dir_list = [p.name for p in p.iterdir() if p.is_dir()]
-    dir_list.sort()
-    try:
-        latest_dir = int(dir_list[-1])
-        fm_dict["new_dir_name"] = str(latest_dir + 1).zfill(3)
-        fm_dict["new_dir_path"] = work_dir + fm_dict["new_dir_name"]
-    except IndexError as err:
-        print(f"作成できません。対象ディレクトリを確認してください。：{err}")
+        new_post_number = latest_posts_number + 1
+        if new_post_number >= 1000:
+            return str(new_post_number).zfill(4)
+        return str(new_post_number).zfill(3)
 
-    # 新記事の作成日時（long: YYYY-MM-DD HH:MM:SS / short: YYMMDD）
-    dt = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    # unittest用に日時指定
-    # dt = datetime.datetime(2020, 4, 29, 15).strftime("%Y-%m-%d %H:%M:%S")
-    fm_dict["created_date_long"] = dt
-    fm_dict["created_date_short"] = (dt[2:10]).replace("-", "")
-
-    # アイキャッチの画像パス
-    fm_dict["eye_path"] = f'/ec/blog/ec_blog_{fm_dict["new_dir_name"]}.jpg'
-
-    # スラッグ
-    fm_dict[
-        "slug_str"
-    ] = f'b0{fm_dict["new_dir_name"]}-{fm_dict["created_date_short"]}-'
-
-    return fm_dict
-
-
-def generate_md_file(params: dict):
-    """新記事のディレクトリとファイルを作成する
-    Args:
-        params: フロントマターに設定する情報
-    """
-
-    dir_name = params["new_dir_name"]
-    dir_path = params["new_dir_path"]
-    l_date = params["created_date_long"]
-    s_date = params["created_date_short"]
-    img_path = params["eye_path"]
-    slug = params["slug_str"]
-    post_type = params["post_type"]
-
-    # ディレクトリを作成
-    pathlib.Path(dir_path + "/img/").mkdir(parents=True)
-
-    # mdファイルにテンプレートからフロントマターを設定
-    md_full_path = f"{dir_path}/{dir_name}_{s_date}.md"
-    with open("template/front_matter.txt") as fm:
-        t = string.Template(fm.read())
-        template = t.substitute(
-            date=l_date,
-            image=img_path,
-            slug=slug,
-            type=post_type,
+    @property
+    def new_post_file_fullpath(self) -> str:
+        return (
+            f"{self.config['path']['content']}"
+            f"{self.new_post_number}_{self.now.strftime('%y%m%d')}.md"
         )
-        with open(md_full_path, "w") as new_md:
+
+    @property
+    def timestamp(self) -> str:
+        return self.now.strftime("%y-%m-%d %H:%M:%S")
+
+    @property
+    def slug(self) -> str:
+        return f"{self.new_post_number}-"
+
+    @property
+    def author(self) -> str:
+        return self.config["consts"]["author"]
+
+    @property
+    def lang(self) -> str:
+        return self.config["consts"]["lang"]
+
+    @property
+    def status(self) -> str:
+        return self.config["consts"]["status"]
+
+    @property
+    def post_url(self) -> str:
+        return f"{self.config['post_url']['prefix']}{self.new_post_number}-"
+
+    @property
+    def image_url(self) -> str:
+        return (
+            f"{self.config['image_url']['prefix']}{self.new_post_number}_"
+            f"{self.now.strftime('%y%m%d')}-0.jpg"
+        )
+
+
+def generate_md_file():
+    fm = FrontMatter()
+    md_file_fullpath = fm.new_post_file_fullpath
+    with open("template/front_matter.txt") as f:
+        t = string.Template(f.read())
+        template = t.substitute(
+            date=fm.timestamp,
+            slug=fm.slug,
+            author=fm.author,
+            lang=fm.lang,
+            status=fm.status,
+            url=fm.post_url,
+            image=fm.image_url,
+        )
+        with open(md_file_fullpath, "w") as new_md:
             new_md.write(template)
 
-    # macOSのAutomatorと連携するために引数としてファイルパスを出力
-    print(md_full_path)
+    # Output file path as an arg to work with masOS Automator.
+    print(md_file_fullpath)
 
 
 def main():
-    """pass"""
-    config = configparser.ConfigParser()
-    config.read("config.ini")
-    blog_path = config["path"]["blog"]
-    generate_md_file(create_front_matter_info(blog_path))
+    generate_md_file()
 
 
 if __name__ == "__main__":
