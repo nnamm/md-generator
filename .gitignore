@@ -3,4 +3,5 @@
 .mypy_cache/
 .venv/
 .vim/
+__pycache__
 config.ini
