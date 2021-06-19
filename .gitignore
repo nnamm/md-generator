@@ -5,3 +5,4 @@
 .vim/
 __pycache__
 config.ini
+test_*
