@@ -3,9 +3,14 @@
 Create the following file in the specified directory.
 
 content
+|
 |__posts
-   |_001_YYMMDD.md(include the front matter)
+   |
+   |_001_YYMMDD.md (include the front matter)
 
+Todo:
+    Self practice of unit testing with pytest.
+    (want to get used to Python development)
 """
 
 import configparser
