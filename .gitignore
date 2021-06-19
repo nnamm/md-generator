@@ -1,5 +1,8 @@
 .DS_Store
-config.ini
 .idea
-/venv/
-/.mypy_cache/
+.mypy_cache/
+.venv/
+.vim/
+__pycache__
+config.ini
+test_*
