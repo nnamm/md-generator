@@ -1,26 +1,24 @@
-# フロントマターを含めてMarkdownファイルを作成するスクリプト
+# Generate a markdown file for blog posts include front matter.
 
-Gridsomeで作ったポートフォリオサイトのブログ記事を書くときに、ディレクトリ作成やフロントマターの諸設定を含むMarkdownファイルをサクッと作るためのスクリプトです。
+A tool for writing blog posts for my site that uses a static site generator. It generates a new article (Markdown) 
+including front matter.
 
-▶︎[nnamm works](https://portfolio.nnamm.com)
+My website: [nnamm.work : portfolio note](https://nnamm.work)  
+Static site generator, powered by Python: [Pelican](https://blog.getpelican.com/)
 
-## 機能
+## Function
 
-config.iniに設定した任意のディレクトリに、以下の記事単位のディレクトリ（001、002以降昇順）を作成します。
+Generate a markdown file in specified directory according to certain rules (config.ini & front_matter.txt). The file 
+name starts with 3-4 character number, which is determined by the tool. 
 
 ```
-/User/hogehoge/blog/ 配下に
-
-|__001
-|    |__img/
-|    |__001_YYMMDD.md
+content
 |
-|__002
-|    |__img/
-|    |__002_YYMMDD.md
-|
+|__posts
+   |
+   |_001_YYMMDD.md (include the front matter)
 ```
 
-## その他
+## Other
 
-サイトのポストタイプは3種類ありますが（blog/graphic/photo）、現在はblogのためだけに使いますので拡張性は考慮していません。
+This tool was developed to be used in conjunction with Automator on macOS. It is a very self-designed tool :)
