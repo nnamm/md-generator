@@ -18,6 +18,7 @@ import datetime
 import pathlib
 import string
 import subprocess
+import sys
 
 
 class FrontMatter:
@@ -161,8 +162,11 @@ def main() -> None:
     md_file_path = generate_md_file()
 
     # Open working dir & generated markdown file for macOS
-    subprocess.run(["open", work_dir], check=True)
-    subprocess.run(["open", app, md_file_path], check=True)
+    try:
+        subprocess.run(["open", work_dir], check=True)
+        subprocess.run(["open", app, md_file_path], check=True)
+    except subprocess.CalledProcessError:
+        print("Failed to start the external app.", file=sys.stderr)
 
 
 if __name__ == "__main__":
