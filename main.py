@@ -17,6 +17,7 @@ import configparser
 import datetime
 import pathlib
 import string
+import subprocess
 
 
 class FrontMatter:
@@ -32,8 +33,18 @@ class FrontMatter:
         self.new_post_number = self.get_new_post_number()
 
     def get_new_post_number(self) -> str:
-        """provisional comment"""
-        p = pathlib.Path(self.config["path"]["content"])
+        """Get new post number function.
+
+        Get the latest post file number from the existing post
+        files (in ascending order).
+
+        Args:
+            none.
+
+        Returns:
+            new_post_number (str): new post number (zero padding).
+        """
+        p = pathlib.Path(self.config["path"]["posts"])
         latest_posts_number = sum(f.is_file() for f in p.iterdir() if f.suffix == ".md")
 
         new_post_number = latest_posts_number + 1
@@ -43,9 +54,12 @@ class FrontMatter:
 
     @property
     def new_post_file_fullpath(self) -> str:
-        """provisional comment"""
+        """File fullpath property getter method.
+
+        Example: /Users/hoge/fuga/content/posts/001_210601.md
+        """
         return (
-            f"{self.config['path']['content']}"
+            f"{self.config['path']['posts']}"
             f"{self.new_post_number}_{self.now.strftime('%y%m%d')}.md"
         )
 
@@ -109,12 +123,20 @@ class FrontMatter:
         )
 
 
-def generate_md_file():
-    """Generate a md-file based on FrontMatter class & template file."""
+def generate_md_file() -> str:
+    """Generate a markdown file.
+
+    Generate a markdown file based on FrontMatter class & template file.
+
+    Args:
+        none.
+
+    Returns:
+        md_file_fullpath (str): Full path of generated markdown file.
+    """
     fm = FrontMatter()
-    md_file_fullpath = fm.new_post_file_fullpath
-    with open("template/front_matter.txt") as f:
-        t = string.Template(f.read())
+    with open("template/front_matter.txt") as temp:
+        t = string.Template(temp.read())
         template = t.substitute(
             date=fm.timestamp,
             slug=fm.slug,
@@ -124,16 +146,23 @@ def generate_md_file():
             url=fm.post_url,
             image=fm.image_url,
         )
-        with open(md_file_fullpath, "w") as new_md:
-            new_md.write(template)
+        md_file_fullpath = fm.new_post_file_fullpath
+        with open(md_file_fullpath, "w") as new_md_file:
+            new_md_file.write(template)
+    return md_file_fullpath
 
-    # Output file path as an arg to work with masOS Automator.
-    print(md_file_fullpath)
 
+def main() -> None:
+    """Prepare to write a new post."""
+    config = configparser.ConfigParser()
+    config.read("config.ini")
+    app = config["app"]["editor"]
+    work_dir = config["path"]["content"]
+    md_file_path = generate_md_file()
 
-def main():
-    """main process"""
-    generate_md_file()
+    # Open working dir & generated markdown file for macOS
+    subprocess.run(["open", work_dir], check=True)
+    subprocess.run(["open", app, md_file_path], check=True)
 
 
 if __name__ == "__main__":
