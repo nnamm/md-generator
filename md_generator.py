@@ -8,9 +8,6 @@ content
    |
    |_001_YYMMDD.md (include the front matter)
 
-Todo:
-    Self practice of unit testing with pytest.
-    (want to get used to Python development)
 """
 
 import configparser
@@ -27,9 +24,9 @@ class FrontMatter:
     Handle the data needed for front matter.
     """
 
-    def __init__(self):
+    def __init__(self, conf="config.ini"):
         self.config = configparser.ConfigParser()
-        self.config.read("config.ini")
+        self.config.read(conf)
         self.now = datetime.datetime.now()
         self.new_post_number = self.get_new_post_number()
 
@@ -47,10 +44,9 @@ class FrontMatter:
         """
         p = pathlib.Path(self.config["path"]["posts"])
         latest_posts_number = sum(f.is_file() for f in p.iterdir() if f.suffix == ".md")
-
         new_post_number = latest_posts_number + 1
-        if new_post_number >= 1000:
-            return str(new_post_number).zfill(4)
+        if new_post_number >= 100:
+            return str(new_post_number)
         return str(new_post_number).zfill(3)
 
     @property
